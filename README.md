@@ -24,6 +24,7 @@ In this app, you can log in to your XTB account via the API and select a certain
 * you can save several accounts in the accounts.json file, so you don't heave to type out the ID every time (format: [Lp, ID, demo/real, note]).
 * You can import .json files with stocks to sped up your operation (check out exp_Indexes.json).
 * If an exchange is closed, the app can wait until its opening.
+* in the minimumTarnsactions.txt you can specify minimum values of different types of instruments (the API does not provide this value)
 # Disclaimer
 Read the code at your own risk!
 
