@@ -1,0 +1,6 @@
+STC - 10
+CRT - 1
+ETF - 1
+IND - 1
+FX - 1
+CMD - 1
