@@ -717,9 +717,9 @@ def main():
           if data != False:   
               symbol = data["symbol"]
               monidata = API.get_CommissionDef(symbol,data['lotMin'])
-              #lotstep posybly mit want to devide prcice by lotstep!!!!!!!!!
+              #lotstep 
               lotstep = data["lotStep"]
-              price = (data["ask"])
+              price = (data["ask"]/lotstep)
               price1 = f'{price} {data["currency"]}'
               #price pln
 
@@ -1000,10 +1000,6 @@ def main():
           preped2 = sum(preped1)
         print('Done!')
         return preped2
-
-      #print ("DEBUG - prices ajusted to minimal perchuse"+"\n"+str(preped))
-      #y = tsum(preped)
-      #print("DEBUG - sum of minimal perchuses: "+str(y))
 
       preped = prep(symbolprice)
       cooked= (mainframe(symbolprice,preped,workingamount))
