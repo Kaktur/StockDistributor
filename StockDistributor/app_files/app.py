@@ -304,10 +304,9 @@ def main():
     incorect = False
     done = False
     while True:
-      f = open("accounts.json",)
-      accounts = json.load(f)
       try:
-        pass
+        f = open("accounts.json",)
+        accounts = json.load(f)
       except:
         break
       clear()
