@@ -297,7 +297,7 @@ def main():
     #=login=
 
     ID = ""
-    Password = "DupaBlada360"
+    Password = ""
     real = False
 
     clear()
