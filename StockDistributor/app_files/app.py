@@ -25,7 +25,6 @@ from datetime import datetime
 import pytz
 import json
 from decimal import *
-import time
 getcontext().prec = 6
 
 #========================
