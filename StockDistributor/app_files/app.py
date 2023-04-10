@@ -126,12 +126,10 @@ def chekticker(AllSymbols, ticker):
                 l = k.split('.')
                 if l[0] == o[0]:
                     if firtst == False:
-                        i[1] = k
+                        i[1] = [k]
                         firtst = True
                         i[2] = 1
                     elif firtst == True:
-                        r = i[1]
-                        i[1] = [r]
                         i[1].append(k)
                         i[2] = 2
                 if i[2] == '':
@@ -179,12 +177,10 @@ def chektickers(AllSymbols, tickers):
                     l = k.split('.')
                     if l[0] == o[0]:
                         if firtst == False:
-                            i[1] = k
+                            i[1] = [k]
                             firtst = True
                             i[2] = 1
                         elif firtst == True:
-                            r = i[1]
-                            i[1] = [r]
                             i[1].append(k)
                             i[2] = 2
                     if i[2] == '':
@@ -602,18 +598,17 @@ def main():
                                         if (c[0] == l) :
                                             tickers.pop(l-1)
                                 else:                         
-                                    j = int(u[1])                       
                                     try:
-                                        j + 1
-                                        blob = True
+                                      j = int(u[1])                       
+                                      blob = True
                                     except:
                                         blob = False
                                 if blob: 
-                                    j = j-1 
+                                    j -= 1 
                                     for c in  tickers:
                                         if (c[0] == l) and  (c[2] == 2):
                                             try:
-                                              c[1] = c[1][j-1]
+                                              c[1] = c[1][j]
                                               c[2] = 1
                                             except:
                                               pass
@@ -660,17 +655,20 @@ def main():
                                         if (c[0] == l) :
                                             tickers.pop(l-1)
                                 else:                         
-                                    j = int(u[1])                       
                                     try:
-                                        j + 1
-                                        blob = True
+                                      j = int(u[1])                       
+                                      blob = True
                                     except:
                                         blob = False
-                                if blob:  
+                                if blob: 
+                                    j -= 1 
                                     for c in  tickers:
                                         if (c[0] == l) and  (c[2] == 2):
-                                            c[1] = c[1][j-1]
-                                            c[2] = 1 
+                                            try:
+                                              c[1] = c[2][j]
+                                              c[2] = 1 
+                                            except:
+                                               pass
                               else:
                                 tickers.append(['',i,''])
                                 tickers = chektickers(AllSymbols, tickers)
@@ -690,6 +688,7 @@ def main():
                     tickers = renumber(tickers)
                     tickersp = prepforprint(tickers,["Lp.", "Ticker", "Description"])
         return ([noclerar,tickers,tickersp,stage,godtogo,fanaly])
+    
     #geting prices and data 
     bs = pickticker(bs)
     tickers = bs[1]
@@ -715,7 +714,6 @@ def main():
           if data != False:   
               symbol = data["symbol"]
               monidata = API.get_CommissionDef(symbol,data['lotMin'])
-              #lotstep 
               lotstep = data["lotStep"]
               price = (data["ask"]/lotstep)
               price1 = f'{price} {data["currency"]}'
@@ -998,6 +996,10 @@ def main():
           preped2 = sum(preped1)
         print('Done!')
         return preped2
+
+      #print ("DEBUG - prices ajusted to minimal perchuse"+"\n"+str(preped))
+      #y = tsum(preped)
+      #print("DEBUG - sum of minimal perchuses: "+str(y))
 
       preped = prep(symbolprice)
       cooked= (mainframe(symbolprice,preped,workingamount))
