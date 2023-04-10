@@ -126,12 +126,10 @@ def chekticker(AllSymbols, ticker):
                 l = k.split('.')
                 if l[0] == o[0]:
                     if firtst == False:
-                        i[1] = k
+                        i[1] = [k]
                         firtst = True
                         i[2] = 1
                     elif firtst == True:
-                        r = i[1]
-                        i[1] = [r]
                         i[1].append(k)
                         i[2] = 2
                 if i[2] == '':
@@ -179,12 +177,10 @@ def chektickers(AllSymbols, tickers):
                     l = k.split('.')
                     if l[0] == o[0]:
                         if firtst == False:
-                            i[1] = k
+                            i[1] = [k]
                             firtst = True
                             i[2] = 1
                         elif firtst == True:
-                            r = i[1]
-                            i[1] = [r]
                             i[1].append(k)
                             i[2] = 2
                     if i[2] == '':
@@ -201,20 +197,21 @@ def prepforprint(tickers,headers):
     tickersp = []
     # my brother in christ, use a switch statement
     for i in tickers:
+        a = san(str(i[1]))
         if i[2] == 1:
-            tickersp.append([i[0],i[1],'found']) 
+            tickersp.append([i[0],a,'found']) 
         elif i[2] == 2:
-            tickersp.append([i[0], san(str(i[1])), '\033[94m'+'select: (5 - ETF CFD, 4 - CFD, 9 - STC)'+'\033[0m']) 
+            tickersp.append([i[0],a,'\033[94m'+'select: (5 - ETF CFD, 4 - CFD, 9 - STC)'+'\033[0m']) 
         elif i[2] == 3:
-            tickersp.append([i[0],i[1],'\033[91m'+'not found'+'\033[0m']) 
+            tickersp.append([i[0],a,'\033[91m'+'not found'+'\033[0m']) 
         elif i[2] == 4:
-            tickersp.append([i[0],i[1],'\033[91m'+'not a ticker'+'\033[0m']) 
+            tickersp.append([i[0],a,'\033[91m'+'not a ticker'+'\033[0m']) 
         elif i[2] == 5:
-            tickersp.append([i[0],i[1],'instrument found']) 
+            tickersp.append([i[0],a,'instrument found']) 
         elif i[2] == 6:
-            tickersp.append([i[0],i[1],'\033[91m'+'instrument not found'+'\033[0m']) 
+            tickersp.append([i[0],a,'\033[91m'+'instrument not found'+'\033[0m']) 
         else:
-            tickersp.append([i[0],i[1],'\033[95m'+'wird ass bug'+'\033[0m']) 
+            tickersp.append([i[0],a,'\033[95m'+'wird ass bug'+'\033[0m']) 
 
     tickerspp = tt.to_string(tickersp,header=headers,style=tt.styles.ascii_thin_double,)
     
@@ -602,18 +599,17 @@ def main():
                                         if (c[0] == l) :
                                             tickers.pop(l-1)
                                 else:                         
-                                    j = int(u[1])                       
                                     try:
-                                        j + 1
-                                        blob = True
+                                      j = int(u[1])                       
+                                      blob = True
                                     except:
                                         blob = False
                                 if blob: 
-                                    j = j-1 
+                                    j -= 1 
                                     for c in  tickers:
                                         if (c[0] == l) and  (c[2] == 2):
                                             try:
-                                              c[1] = c[1][j-1]
+                                              c[1] = c[1][j]
                                               c[2] = 1
                                             except:
                                               pass
@@ -660,17 +656,20 @@ def main():
                                         if (c[0] == l) :
                                             tickers.pop(l-1)
                                 else:                         
-                                    j = int(u[1])                       
                                     try:
-                                        j + 1
-                                        blob = True
+                                      j = int(u[1])                       
+                                      blob = True
                                     except:
                                         blob = False
-                                if blob:  
+                                if blob: 
+                                    j -= 1 
                                     for c in  tickers:
                                         if (c[0] == l) and  (c[2] == 2):
-                                            c[1] = c[1][j-1]
-                                            c[2] = 1 
+                                            try:
+                                              c[1] = c[2][j]
+                                              c[2] = 1 
+                                            except:
+                                               pass
                               else:
                                 tickers.append(['',i,''])
                                 tickers = chektickers(AllSymbols, tickers)
@@ -690,6 +689,7 @@ def main():
                     tickers = renumber(tickers)
                     tickersp = prepforprint(tickers,["Lp.", "Ticker", "Description"])
         return ([noclerar,tickers,tickersp,stage,godtogo,fanaly])
+    
     #geting prices and data 
     bs = pickticker(bs)
     tickers = bs[1]
@@ -715,7 +715,6 @@ def main():
           if data != False:   
               symbol = data["symbol"]
               monidata = API.get_CommissionDef(symbol,data['lotMin'])
-              #lotstep 
               lotstep = data["lotStep"]
               price = (data["ask"]/lotstep)
               price1 = f'{price} {data["currency"]}'
@@ -992,7 +991,7 @@ def main():
                 debug = False
                 if  debug == True:
                   print (f'{n[3]}  |  {s} - {ma1} = {Decimal(ma1) - s}')
-                if s >= ma1:
+                if s >= Decimal(ma1):
                   n[3] = Decimal(n[3]) - Decimal(n[5])
                   p.remove(i)
           preped2 = sum(preped1)
@@ -1046,6 +1045,7 @@ def main():
     stage1 = []
     for i in cooked:
      stage1.append(['',i[1],''])
+    renumber(stage1)
     stage2,stage2b = datafeching(stage1)
     for i in stage2[:]:
       if (i[2] == 'Not found') or((i[6][0] == '\033[92m'+'OPEN'+'\033[0m') and (i[6][1] <= 100000)):
@@ -1089,6 +1089,7 @@ def main():
         while True:
           status, order_code = API.make_Trade(i[0], 0, 0, float(a))
           status = API.check_Trade(order_code)
+          print(status)
           time = 0
           while status == 1:
             time += 1
