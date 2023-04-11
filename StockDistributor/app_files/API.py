@@ -452,7 +452,7 @@ class XTB:
         price = self.get_Candles("M1",symbol,qty_candles=1)
         if price == False:
             return 0, 'error'
-        price = price[1]["open"]+price[1]["close"]
+        price = (price[1]["open"]+price[1]["close"])/1000
 
         delay = self.to_milliseconds(days=days, hours=hours, minutes=minutes)
         if delay==0:
