@@ -1,5 +1,5 @@
 # StockDistributor
-A cmd Python app for baying stocks on  XTB for a specific amount of money
+A cmd Python app for buying stocks on  XTB for a specific amount of money
 
 # Install
 To install you are going to need python and some libraries
